@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+	"regexp"
 	"strconv"
 	"strings"
 )
@@ -8,21 +10,35 @@ import (
 // ValidaCPF retorna se o cpf é válido ou não
 func validaCPF(cpf string) bool {
 
-	// TO DO: Validar que não tem nenhum traço nem ponto no cpf digitado e removê-los
-
-	// To Do: Validar que o CPF só possui números
-
-	// Validar que o cpf possui 11 caracteres
-	if len(cpf) != 11 {
-		return false
-	}
-
+	cpf = formataCPF(cpf)
 	numerosCPF, _ := separaCPF(cpf)
 
 	// Validar se os dígitos verificadores estão corretos
 	digito1, digito2 := validaDigitosVerificadores(numerosCPF)
 
-	return digito1 || digito2
+	return digito1 && digito2
+}
+
+func formataCPF(cpf string) string {
+	matched, err := regexp.Match(`[0-9.?\-?]{11,14}`, []byte(cpf))
+	if err != nil {
+		panic(err)
+	}
+	if !matched {
+		fmt.Println("O cpf informado não está escrito corretamente")
+		return ""
+	}
+
+	replacer := strings.NewReplacer(".", "", "-", "")
+	cpf = replacer.Replace(cpf)
+
+	// Validar que o cpf possui 11 caracteres
+	if len(cpf) != 11 {
+		fmt.Println("O cpf informado não está escrito corretamente")
+		return ""
+	}
+
+	return cpf
 }
 
 func separaCPF(cpf string) ([]int, []string) {

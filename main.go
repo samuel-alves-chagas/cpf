@@ -1,12 +1,31 @@
 package main
 
-import "fmt"
+import (
+	"bufio"
+	"fmt"
+	"os"
+)
 
 func main() {
-	// TO DO: Pegar o cpf que o usuário digitou no terminal
-	const cpf = ""
 
-	// Validar se os dígitos verificadores estão corretos
-	ehValido := validaCPF(cpf)
-	fmt.Println(ehValido)
+	var cpf string
+
+	fmt.Println("Informe o seu CPF:")
+
+	scanner := bufio.NewScanner(os.Stdin)
+
+	for scanner.Scan() {
+		cpf = scanner.Text()
+		break
+	}
+
+	if err := scanner.Err(); err != nil {
+		fmt.Println("Error:", err)
+	}
+
+	if validaCPF(cpf) {
+		fmt.Println("O CPF informado é válido")
+	} else {
+		fmt.Println("O CPF informado não é válido")
+	}
 }
