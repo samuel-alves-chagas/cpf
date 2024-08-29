@@ -4,28 +4,38 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strings"
 )
 
 func main() {
 
-	var cpf string
+	fmt.Print("\nSeja bem vindo ao validador do CPF, informe a função desejada:\n\n1 - Validar CPF\n9 - Sair\n")
 
-	fmt.Println("Informe o seu CPF:")
+	var text string
+	reader := bufio.NewReader(os.Stdin)
 
-	scanner := bufio.NewScanner(os.Stdin)
+LeituraDados:
+	for {
+		text, _ = reader.ReadString('\n')
+		text = strings.Replace(text, "\n", "", -1)
 
-	for scanner.Scan() {
-		cpf = scanner.Text()
-		break
-	}
+		switch text {
+		case "1":
+			fmt.Print("\nInforme o CPF que deve ser validado: ")
+			text, _ = reader.ReadString('\n')
+			text = strings.Replace(text, "\n", "", -1)
 
-	if err := scanner.Err(); err != nil {
-		fmt.Println("Error:", err)
-	}
+			if validaCPF(text) {
+				fmt.Print("O CPF informado é válido\n")
+			} else {
+				fmt.Print("O CPF informado NÃO É VÁLIDO!\n")
+			}
+		case "9":
+			break LeituraDados
+		default:
+			fmt.Print("As únicas funções possíveis são:\n\n1 - Validar CPF\n9 - Sair\n")
+		}
 
-	if validaCPF(cpf) {
-		fmt.Println("O CPF informado é válido")
-	} else {
-		fmt.Println("O CPF informado não é válido")
+		fmt.Print("\nPara validar outro CPF pressione 1, para sair pressione 9\n")
 	}
 }
